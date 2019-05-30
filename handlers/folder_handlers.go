@@ -18,9 +18,9 @@ import (
 //·3      Total number of bytes stored in that folder.
 const (
 	fileNumber                           = 0
-	AverageNumberOfAlphaCharsPerTextFile = 1
-	AverageWordLengthPerTextFile         = 2
-	TotalNumberOfBytes                   = 3
+	averageNumberOfAlphaCharsPerTextFile = 1
+	averageWordLengthPerTextFile         = 2
+	totalNumberOfBytes                   = 3
 )
 
 
@@ -82,17 +82,17 @@ func GetFolderStatsHandler(c echo.Context) error {
 		if err != nil {
 			return err
 		}
-	case AverageNumberOfAlphaCharsPerTextFile:
+	case averageNumberOfAlphaCharsPerTextFile:
 		response, err = CountAverageNumberOfAlphaCharsPerTextFile(entryPoint, filePaths)
 		if err != nil {
 			return err
 		}
-	case AverageWordLengthPerTextFile:
+	case averageWordLengthPerTextFile:
 		response, err = CountAverageWordLengthPerTextFile(entryPoint, filePaths)
 		if err != nil {
 			return err
 		}
-	case TotalNumberOfBytes:
+	case totalNumberOfBytes:
 		response, err = CountTotalNumberOfBytes(entryPoint, filePaths)
 		if err != nil {
 			return err
