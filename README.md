@@ -15,10 +15,17 @@
 
 ### Quick Start
 
+### Installation
+
+Before build the project, install Testify and Echo 
+```
+go get -u github.com/labstack/echo/...
+go get github.com/stretchr/testify
+```
+
 #### Build 
 ```
-// Get Echo (Web Framework)
-go get -u github.com/labstack/echo/...
+go build .
 ```
 
 #### Test
