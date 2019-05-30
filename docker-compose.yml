@@ -1,0 +1,10 @@
+version: "2.3"
+services:
+  webservice:
+    image: webservice:latest
+    restart: always
+    ports:
+      - 1323:1323
+    volumes:
+      - /Users/tyler/storage:/storage
+    command: /app/webservice_linux_amd64

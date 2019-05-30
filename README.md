@@ -38,3 +38,18 @@ go test -v ./...
 // Server started on localhost:1323
 go run .
 ```
+
+### Docker 
+```
+docker build -t webservice .
+docker run webservice /app/webservice_linux_amd64
+```
+
+### Docker Compose
+```
+docker build -t webservice .
+# Customise your volume & parameters
+docker-compose up
+```
+
+
