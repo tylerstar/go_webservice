@@ -64,27 +64,36 @@ func GetFolderStatsHandler(c echo.Context) error {
 			"Invalid value, parameter 'queryTarget' expect a int from 0 ~ 3, got %s", queryTarget)
 	}
 
+	// Get all the files first
+	filePaths, err := utils.GetAllFilePathsFromEntryPoint(entryPoint)
+	if err != nil {
+		log.Fatalf("Error occurred while listing file from the entry point: %s, error: %v",
+			entryPoint, err)
+		return echo.NewHTTPError(http.StatusInternalServerError,
+			"Failed to list the filePaths from the entry point: %s", entryPoint)
+	}
+
 	// Response might be different according to the value of queryTarget
 	var response interface{}
 
 	switch queryNumber {
 	case fileNumber:
-		response, err = CountFilesFromEntryPoint(entryPoint)
+		response, err = CountFilesFromEntryPoint(entryPoint, filePaths)
 		if err != nil {
 			return err
 		}
 	case AverageNumberOfAlphaCharsPerTextFile:
-		response, err = CountAverageNumberOfAlphaCharsPerTextFile(entryPoint)
+		response, err = CountAverageNumberOfAlphaCharsPerTextFile(entryPoint, filePaths)
 		if err != nil {
 			return err
 		}
 	case AverageWordLengthPerTextFile:
-		response, err = CountAverageWordLengthPerTextFile(entryPoint)
+		response, err = CountAverageWordLengthPerTextFile(entryPoint, filePaths)
 		if err != nil {
 			return err
 		}
 	case TotalNumberOfBytes:
-		response, err = CountTotalNumberOfBytes(entryPoint)
+		response, err = CountTotalNumberOfBytes(entryPoint, filePaths)
 		if err != nil {
 			return err
 		}
@@ -97,16 +106,7 @@ func GetFolderStatsHandler(c echo.Context) error {
 	return c.JSON(http.StatusOK, &response)
 }
 
-func CountFilesFromEntryPoint(entryPoint string) (interface{}, error) {
-	// Count how many files within the directory
-	filePaths, err := utils.GetAllFilePathsFromEntryPoint(entryPoint)
-	if err != nil {
-		log.Fatalf("Error occurred while listing file from the entry point: %s, error: %v",
-			entryPoint, err)
-		return nil, echo.NewHTTPError(http.StatusInternalServerError,
-			"Failed to list the filePaths from the entry point: %s", entryPoint)
-	}
-
+func CountFilesFromEntryPoint(entryPoint string, filePaths []string) (interface{}, error) {
 	fileCount := len(filePaths)
 
 	var response struct {
@@ -121,21 +121,13 @@ func CountFilesFromEntryPoint(entryPoint string) (interface{}, error) {
 	return response, nil
 }
 
-func CountAverageNumberOfAlphaCharsPerTextFile(entryPoint string) (interface{}, error) {
-	// Get all the files first
-	filePaths, err := utils.GetAllFilePathsFromEntryPoint(entryPoint)
-	if err != nil {
-		log.Fatalf("Error occurred while listing file from the entry point: %s, error: %v",
-			entryPoint, err)
-		return nil, echo.NewHTTPError(http.StatusInternalServerError,
-			"Failed to list the filePaths from the entry point: %s", entryPoint)
-	}
-
+func CountAverageNumberOfAlphaCharsPerTextFile(entryPoint string, filePaths []string) (interface{}, error) {
 	// Get number of alpha chars per file
 	fileAlphaCharsCountMap := make(map[string]int)
 	totalFileAlphaCharsCount := 0
 
 	var alphaCharsNumber int
+	var err error
 	for _, filePath := range filePaths {
 		alphaCharsNumber, err = utils.CountFileAlphaChars(filePath)
 		if err != nil {
@@ -169,16 +161,7 @@ func CountAverageNumberOfAlphaCharsPerTextFile(entryPoint string) (interface{}, 
 	return response, nil
 }
 
-func CountAverageWordLengthPerTextFile(entryPoint string) (interface{}, error) {
-	// Get all the files first
-	filePaths, err := utils.GetAllFilePathsFromEntryPoint(entryPoint)
-	if err != nil {
-		log.Fatalf("Error occurred while listing file from the entry point: %s, error: %v",
-			entryPoint, err)
-		return nil, echo.NewHTTPError(http.StatusInternalServerError,
-			"Failed to list the filePaths from the entry point: %s", entryPoint)
-	}
-
+func CountAverageWordLengthPerTextFile(entryPoint string, filePaths []string) (interface{}, error) {
 	fileAverageWordLengthMap := make(map[string]float32)
 	var totalFileAverageWordLength float32
 
@@ -218,16 +201,7 @@ func CountAverageWordLengthPerTextFile(entryPoint string) (interface{}, error) {
 	return response, nil
 }
 
-func CountTotalNumberOfBytes(entryPoint string) (interface{}, error) {
-	// Get all the files first
-	filePaths, err := utils.GetAllFilePathsFromEntryPoint(entryPoint)
-	if err != nil {
-		log.Fatalf("Error occurred while listing file from the entry point: %s, error: %v",
-			entryPoint, err)
-		return nil, echo.NewHTTPError(http.StatusInternalServerError,
-			"Failed to list the filePaths from the entry point: %s", entryPoint)
-	}
-
+func CountTotalNumberOfBytes(entryPoint string, filePaths []string) (interface{}, error) {
 	// Get file size (number of bytes) of each file
 	fileSizeMap := make(map[string]int64)
 	var totalNumberOfBytes int64
