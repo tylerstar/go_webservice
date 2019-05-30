@@ -1,4 +1,4 @@
-# Go Webservices
+# Go Webservice
 
 ##### A rest webservice in Go that allows to operate over text files as resources.
 - Create a text file with some contents stored in a given path.
