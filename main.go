@@ -1,8 +1,8 @@
 package main
 
 import (
+	"./handlers"
 	"github.com/labstack/echo"
-	"go_webservice/handlers"
 	"net/http"
 )
 

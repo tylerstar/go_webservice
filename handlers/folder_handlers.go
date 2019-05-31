@@ -1,10 +1,10 @@
 package handlers
 
 import (
+	"../utils"
 	"fmt"
 	"github.com/labstack/echo"
 	"github.com/labstack/gommon/log"
-	"go_webservice/utils"
 	"net/http"
 	"os"
 	"strconv"
